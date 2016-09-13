@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -23,15 +24,16 @@ public class Display extends Application {
 	int turn = 1;
 	NaC logic;
 	Group board;
+	StackPane stack;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
 		board = new Group();
+		stack = new StackPane();
 		
 		logic = NaC.newGame();
 		redraw();
-		
 		
 		// board.set(Pos.CENTER);
 		Label winner = new Label("Hurray, you are the winner of the game!");
@@ -43,9 +45,6 @@ public class Display extends Application {
 		gameover.setAlignment(Pos.CENTER);
 		gameover.setFont(Font.font("Arial",FontWeight.BOLD, 15));
 		gameover.setMaxWidth(width);
-
-
-
 
 		board.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -77,18 +76,19 @@ public class Display extends Application {
 
 				// check if the person won --EXECUTED
 				if (logic.checkWinner() == true) {
-					board.getChildren().clear();
-					board.getChildren().add(winner);
+					//board.getChildren().clear();
+					stack.getChildren().add(winner);
 				}
 				else if (logic.checkFill() == true) {
-					board.getChildren().clear();
-					board.getChildren().add(gameover);
+					//board.getChildren().clear();
+					stack.getChildren().add(gameover);
 				}
 				turn++;
 			}
 		});
-
-		Scene scene = new Scene(board, width, height);
+		
+		stack.getChildren().add(board);
+		Scene scene = new Scene(stack, width, height);
 
 		primaryStage.setTitle("Naughts and Crosses");
 		primaryStage.setScene(scene);
@@ -99,9 +99,8 @@ public class Display extends Application {
 	public void redraw() {
 		for (int i = 0; i < logic.values.length; i++) {
 			for (int j = 0; j < logic.values.length; j++) {
-				Rectangle r = new Rectangle(logic.values[i][j].getX() * size, logic.values[i][j].getY() * size, size,
-						size);
-				System.out.println("Made new rectangle in redraw method.");
+				//Create new rectangle
+				Rectangle r = new Rectangle(logic.values[i][j].getX() * size, logic.values[i][j].getY() * size,size,size);
 				r.setStroke(Color.BLACK);
 				r.setArcWidth(20);//rounded corners
 				r.setArcHeight(20);
